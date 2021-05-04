@@ -1,23 +1,24 @@
-'use strict'
+"use strict";
 
 const PORT = 8000;
-const express = require('express');
+const express = require("express");
 const app = express();
-const fs = require('fs');
-const mysql = require('mysql'); // not using this
-const bodyParser = require('body-parser'); // is inside express or something
-const { MongoClient } = require('mongodb');
-const http = require('http');
+const fs = require("fs");
+const { MongoClient } = require("mongodb");
+// const http = require("http");
 
-app.use('/js', express.static('/js'));
-app.use('/css', express.static('/css'));
+app.use("/js", express.static("js"));
+app.use("/css", express.static("css"));
 
-const credentials = fs.readFileSync('./cert.pem');
+const credentials = fs.readFileSync("./cert.pem");
 
-const client = new MongoClient('mongodb+srv://wecycle-vancouver.2hson.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority', {
-  sslKey: credentials,
-  sslCert: credentials
-});
+const client = new MongoClient(
+  "mongodb+srv://wecycle-vancouver.2hson.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority",
+  {
+    sslKey: credentials,
+    sslCert: credentials,
+  }
+);
 
 // const database = client.db("WecycleMain");
 // const collection = database.collection("Users");
@@ -25,7 +26,7 @@ const client = new MongoClient('mongodb+srv://wecycle-vancouver.2hson.mongodb.ne
 async function run() {
   try {
     await client.connect();
-    // --> 
+    // -->
     const database = client.db("WecycleMain");
     const collection = database.collection("Users");
     const docCount = await collection.countDocuments({});
@@ -42,12 +43,18 @@ async function run() {
     // });
 
     // collection.insertMany([{
-      
+
     // }])
 
-    removeFromDB({name : "Johnson Lau"});
-    addToUsersCollection("Raymond Wong", "778-876-5432", 0, 120, "Heritage Mountain");
-    updateCollection("name", "Raymond Wong", "address", "123 Las Vegas Rd, LA");
+    removeFromDB({ name: "" });
+    // addToUsersCollection(
+    //   "Raymond Wong",
+    //   "778-876-5432",
+    //   0,
+    //   120,
+    //   "Heritage Mountain"
+    // );
+    // updateCollectionOnID({name : "Raymond Wong"}, {address : "123 Las Vegas Rd, LA"});
     console.log(testGet);
 
     // perform actions using client
@@ -57,104 +64,85 @@ async function run() {
   }
 }
 
-function removeFromDB(object) {
-  const database = client.db("WecycleMain");
-  const collection = database.collection("Users");
-  collection.deleteOne(object);
+function removeFromDB(objectToRemove) {
+  client.connect();
+  client.db("WecycleMain").collection("Users").deleteOne(objectToRemove);
+  console.log("deleted successfully!");
+  client.close();
 }
 
-function addToUsersCollection(nameValue, contactNumberValue, bottlesDonatedValue, bottlesTakenValue, addressValue) {
-  const database = client.db("WecycleMain");
-  const collection = database.collection("Users");
-  collection.addOne({
-    name : nameValue,
-    contactNumber : contactNumberValue,
-    bottlesDonated : bottlesDonatedValue,
-    bottlesTaken : bottlesTakenValue,
-    address : addressValue
+function addToUsersCollection(
+  nameValue,
+  contactNumberValue,
+  bottlesDonatedValue,
+  bottlesTakenValue,
+  addressValue
+) {
+  client.connect();
+  client.db("WecycleMain").collection("Users").insertOne({
+    name: nameValue,
+    contactNumber: contactNumberValue,
+    bottlesDonated: bottlesDonatedValue,
+    bottlesTaken: bottlesTakenValue,
+    address: addressValue,
   });
 }
 
-function updateCollection(searchKey, searchValue, key, newValue) {
-  const database = client.db("WecycleMain");
-  const collection = database.collection("Users");
-  collection.updateOne({
-    searchKey : searchValue
-  }, {
-    $set: { key : value}
-  });
+function updateCollectionOnID(searchValue, key, newValue) {
+  client.connect();
+  client.db("WecycleMain").collection("Users").updateOne(
+    {
+      _id: searchValue,
+    },
+    {
+      $set: { key: newValue },
+    }
+  );
 }
 
 console.log("check before the db run");
 run().catch(console.dir);
 
-// EXPRESS METHODS 
+// EXPRESS METHODS
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/html/index.html');
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/html/index.html");
 });
 
-app.post('/create', function (req, res){
-
+app.post("/create", function (req, res) {
+  res.send({ status: "success", rows, results });
 });
 
-app.get('/read-table', function (req, res){
-  try {
-    await client.connect();
-    const database = client.db("WecycleMain");
-    const collection = database.collection("Users");
-    let results = await collection.find({}).toArray();
-    res.send({status: "success", rows: results});
-  } catch (err){
-    res.send({status: err});
-  }
+app.get("/read-table", function (req, res) {
+  res.setHeader("Content-Type", "application/json");
+  client.connect();
+  let testData = client.db("WecycleMain").collection("Users").find().toJSON();
+  res.send(testData);
+  console.log(testData,  "#################################read- tables###########");
+  client.close();
 
+  // async function readTable() {
+  //   try {
+  //     await client.connect();
+  //     const database = client.db("WecycleMain");
+  //     const collection = database.collection("Users");
+  //     let results = await collection.find({}).toArray();
+  //     console.log(results);
+  //     res.send({ status: "success", rows: results });
+  //   } catch (err) {
+  //     res.send({ status: err });
+  //   }
+  // }
 });
 
-app.post('/update-table', function (req, res){
-
+app.post("/update-table", function (req, res) {
+  res.send({ status: "success", rows, results });
 });
 
-app.post('/delete-row', function (req, res){
-
+app.post("/delete-row", function (req, res) {
+  res.send({ status: "successuccess", rows, results });
 });
-
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
