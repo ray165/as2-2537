@@ -46,7 +46,7 @@ async function run() {
 
     // }])
 
-    removeFromDB({ name: "" });
+    // removeFromDB({ name: "" });
     // addToUsersCollection(
     //   "Raymond Wong",
     //   "778-876-5432",
@@ -115,24 +115,26 @@ app.post("/create", function (req, res) {
 
 app.get("/read-table", function (req, res) {
   res.setHeader("Content-Type", "application/json");
-  client.connect();
-  let testData = client.db("WecycleMain").collection("Users").find().toJSON();
-  res.send(testData);
-  console.log(testData,  "#################################read- tables###########");
-  client.close();
 
-  // async function readTable() {
-  //   try {
-  //     await client.connect();
-  //     const database = client.db("WecycleMain");
-  //     const collection = database.collection("Users");
-  //     let results = await collection.find({}).toArray();
-  //     console.log(results);
-  //     res.send({ status: "success", rows: results });
-  //   } catch (err) {
-  //     res.send({ status: err });
-  //   }
-  // }
+  // where 'client' is a constant of the mongodb atlas url + SSL certificates
+
+  async function grabData() {
+    await client.connect();
+    client.db("WecycleMain").collection("Users")
+    .find()
+    .toArray()
+    .then((data) => {
+      console.log(data);
+      res.json(data); //is this part wrong?
+    })
+    .catch((error) => console.error(error));
+  };
+
+  grabData();
+
+    // client.close(); // closing the client will break the program. Why?
+
+
 });
 
 app.post("/update-table", function (req, res) {
@@ -140,7 +142,7 @@ app.post("/update-table", function (req, res) {
 });
 
 app.post("/delete-row", function (req, res) {
-  res.send({ status: "successuccess", rows, results });
+  res.send({ status: "success", rows, results });
 });
 
 app.listen(PORT, () => {
