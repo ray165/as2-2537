@@ -69,7 +69,7 @@ function removeFromDB(objectToRemove) {
   client.connect();
   client.db("WecycleMain").collection("Users").deleteOne(objectToRemove);
   console.log("deleted successfully!");
-  client.close();
+  // client.close();
 }
 
 function addToUsersCollection(
@@ -102,7 +102,7 @@ function updateCollectionOnID(searchValue, key, newValue) {
 }
 
 console.log("check before the db run");
-run().catch(console.dir);
+// run().catch(console.dir);
 
 // EXPRESS METHODS
 
@@ -149,19 +149,42 @@ app.get("/read-table", function (req, res) {
 
   // where 'client' is a constant of the mongodb atlas url + SSL certificates
 
+
   async function grabData() {
-    await client.connect();
-    client.db("WecycleMain").collection("Users")
-    .find()
-    .toArray()
-    .then((data) => {
-      console.log(data);
-      res.json(data); //is this part wrong?
-    })
-    .catch((error) => console.error(error));
+    const client = new MongoClient(
+      "mongodb+srv://wecycle-vancouver.2hson.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority",
+      {
+        sslKey: credentials,
+        sslCert: credentials,
+        useUnifiedTopology: true,
+      }
+    );
+
+    try {
+      await client.connect();
+      client.db("WecycleMain").collection("Users")
+      .find()
+      .toArray()
+      .then((data) => {
+        console.log(data);
+        res.json(data); //is this part wrong?
+      })
+      .catch((error) => console.error(error));
+    } catch (err) {
+      throw new Error("didnt connect to mongodb");
+    } finally {
+      // await client.close();
+    };
+
+    //
   };
 
-  grabData();
+  
+  try {
+    grabData();
+  } catch (err) {
+    throw new Error("grab data didnt execute properly");
+  }
 
     // client.close(); // closing the client will break the program. Why?
 
