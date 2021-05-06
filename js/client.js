@@ -5,7 +5,7 @@ $(document).ready(function () {
     dataType: "json",
     type: "GET",
     success: function (data) {
-      console.log("SUCCESS HTML:", data);
+      console.log("SUCCESS JSON ARRAY:", data);
       // for loop to build the table
       let str = `<table class="table table-striped"><tr>
             <th class="id_header"><span>ID</span></th>
@@ -14,12 +14,13 @@ $(document).ready(function () {
             <th class="bottlesDonated_header"><span>Bottles Donated</span></th>
             <th class="address_header"><span>Address</span></th>
           </tr>`;
-      for (let i = 0; i < data.rows.length; i++) {
-        let row = data.rows[i];
+      // console.log(data[0]);    
+      for (let i = 0; i < data.length; i++) {
+        let row = data[i];
         console.log("row", row);
         str +=
           "<tr><td class='id'>" +
-          row._ID +
+          row._id +
           "</td><td>" +
           row.name +
           "</td><td class='email'><span>" +
@@ -30,8 +31,9 @@ $(document).ready(function () {
           row.bottlesTaken +
           "</td><td class='address'><span>" +
           row.address +
-          "</span></td></tr></table>";
-      }
+          "</span></td>";
+      }     
+      str += "</tr></table>";
       $("#root").html(str);
     },
     error: function (jqXHR, textStatus, errorThrown) {
