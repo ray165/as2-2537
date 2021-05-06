@@ -12,7 +12,9 @@ $(document).ready(function () {
             <th class="name_header"><span>Name</span></th>
             <th class="contactNumber_header"><span>Contact Number</span></th>
             <th class="bottlesDonated_header"><span>Bottles Donated</span></th>
+            <th class="bottlesTaken_header"><span>Bottles Taken</span></th>
             <th class="address_header"><span>Address</span></th>
+            <th class="deleteRow"><span>Delete Row</span></th>
           </tr>`;
       // console.log(data[0]);    
       for (let i = 0; i < data.length; i++) {
@@ -21,9 +23,9 @@ $(document).ready(function () {
         str +=
           "<tr><td class='id'>" +
           row._id +
-          "</td><td>" +
+          "</td><td class='name'>" +
           row.name +
-          "</td><td class='email'><span>" +
+          "</td><td class='contactNumber'><span>" +
           row.contactNumber +
           "</td><td class='bottlesDonated'><span>" +
           row.bottlesDonated +
@@ -31,7 +33,8 @@ $(document).ready(function () {
           row.bottlesTaken +
           "</td><td class='address'><span>" +
           row.address +
-          "</span></td>";
+          "</span></td><td class='deleteBtn'>" +
+          `<button type="button" class="delete-button" id="${row._id}">Delete Row</button></td>`;
       }     
       str += "</tr></table>";
       $("#root").html(str);
