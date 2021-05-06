@@ -17,6 +17,7 @@ const client = new MongoClient(
   {
     sslKey: credentials,
     sslCert: credentials,
+    useUnifiedTopology: true,
   }
 );
 
@@ -60,7 +61,7 @@ async function run() {
     // perform actions using client
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 
@@ -112,6 +113,36 @@ app.get("/", (req, res) => {
 app.post("/create", function (req, res) {
   res.send({ status: "success", rows, results });
 });
+
+app.get('/', function(req, res) {
+    
+  const connection = mysql.createTableConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      multipleStatements: true
+  });
+
+  const createDBTables = `CREATING WECYCLE DATABASE;
+      use test;
+      CREATE TABLE IF NOT EXISTS clients (
+      ID int NOT NULL AUTO_INCREMENT,
+      name varchar(30),
+      email varchar(30),
+      PRIMARY KEY (ID));`;
+
+  connection.connect();
+  connection.query(createDBTables, function (error, results, fields) {
+      if (error) {
+          throw error;
+      }
+  });
+  connection.end();
+
+  let doc = fs.readFileSync('./index.html', "utf8");
+  res.send(doc);
+})
+
 
 app.get("/read-table", function (req, res) {
   res.setHeader("Content-Type", "application/json");

@@ -20,7 +20,7 @@ $(document).ready(function () {
         str +=
           "<tr><td class='id'>" +
           row._ID +
-          "</td><td>" +
+          "</td><td class = 'name'>" +
           row.name +
           "</td><td class='email'><span>" +
           row.contactNumber +
