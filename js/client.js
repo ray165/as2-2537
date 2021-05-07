@@ -25,15 +25,15 @@ $(document).ready(function () {
           str +=
             "<tr><td class='id'>" +
             row._id +
-            "</td><td id ='name'>" +
+            "</td><td class='name'>" +
             row.name +
-            "</td><td id='contactNumber'><span>" +
+            "</td><td class='contactNumber'><span>" +
             row.contactNumber +
-            "</td><td id='bottlesDonated'><span>" +
+            "</td><td class='bottlesDonated'><span>" +
             row.bottlesDonated +
-            "</td><td id='bottlesTaken'><span>" +
+            "</td><td class='bottlesTaken'><span>" +
             row.bottlesTaken +
-            "</td><td id='address'><span>" +
+            "</td><td class='address'><span>" +
             row.address +
             "</span></td><td class='deleteBtn'>" +
             `<button type="button" class="delete-button" id="${row._id}">Delete Row</button></td>`;
@@ -46,13 +46,46 @@ $(document).ready(function () {
         console.log("ERROR:", jqXHR, textStatus, errorThrown);
       },
     });
-  };
+  }
   readTable();
 
   // *******************************
   // UPDATE SECITON INDIVIDUAL CELLS
   // *******************************
   $(document).on("click", "span", function () {
+    if ($(this).parent().attr("class") === "address") {
+      //console.log($(this).text() );
+      // got the td, let's use it create a slight-of-hand
+      // create an input, put the text from the span into
+      // the input, then when the user presses enter,
+      // take the updated text from input and put it into a span
+      // and remove the input
+      let spanText = $(this).text();
+      let td = $(this).parent();
+      let input = $("<input type='text' value='" + spanText + "'>");
+
+      td.html(input);
+      //console.log(td.html());
+      $(input).keyup(function (e) {
+        let val = null;
+        let span = null;
+        if (e.which == 13) {
+          //console.log(td);
+          val = $(input).val();
+          span = $("<span>" + val + "</span>");
+          td.html(span);
+          // lastly, send the update:
+
+          console.log(td.parent().find("[class='id']")[0]);
+
+          let dataToSend = {
+            id: td.parent().find("[class='id']").html(),
+            email: val,
+          };
+        }
+      });
+    }
+
     console.log("table clicked!");
   });
 
