@@ -42,21 +42,28 @@ $(document).ready(function () {
 
 
 
+      
+      //When clicking the delete button, take the id attribute as the objectID for the user being deleted.
       $(document).on('click', '.delete-button', function () {
 
         let rowId = $(this).attr('id');
 
+        //ajax call to delete the row.
         $.ajax({
           url: "/delete-row/" + rowId,
           method: 'POST',
           contentType: "application/json",
           dataType: "json",
           success: function (data) {
+
+            //recreate the table with the read-table ajax call and override the root element with the new recreated table.
+
             $.ajax({
               url: "/read-table",
               dataType: "json",
               type: "GET",
               success: function (data) {
+
                 // for loop to build the table
                 let str = `<table class="table table-striped"><tr>
                       <th class="id_header"><span>ID</span></th>
@@ -87,7 +94,9 @@ $(document).ready(function () {
                     `<button type="button" class="delete-button" id="${row._id}">Delete Row</button></td>`;
                 }
                 str += "</tr></table>";
-                $("#root").html(str);}})
+                $("#root").html(str);
+              }
+            })
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log("ERROR:", jqXHR, textStatus, errorThrown);
@@ -106,6 +115,10 @@ $(document).ready(function () {
     }
   });
 
+
+
+
+
   $('#createTable').click(function (e) {
     e.preventDefault();
 
@@ -120,17 +133,16 @@ $(document).ready(function () {
       dataType: "json",
       type: "POST",
       data: formData,
-      success: function(data) {
+      success: function (data) {
         $("#status").html("DB updated.");
         //getTable
       },
-      error: function(jqXHR, textStatus, errorThrown) {
+      error: function (jqXHR, textStatus, errorThrown) {
         $("#p2").text(jqXHR.statusText);
         console.log("ERROR:", jqXHR, textStatus, errorThrown);
       }
     });
-  }
-  )
+  })
   $("#root").on(function (e) {
     // don't allow the anchor to visit the link
     e.preventDefault();

@@ -63,8 +63,11 @@ app.get("/read-table", function (req, res) {
 
 
   try {
+
+    //The code below can be used to delete the entire database or generate some users for testing.
+
     // client.db("WecycleMain").collection("Users").deleteMany({
-    //   name: "Zainabe"
+    //   bottlesDonated: 27
     // })
     // client.db("WecycleMain").collection("Users").insertMany([{
     //   name: "Mazin",
@@ -120,10 +123,12 @@ app.post("/update-table", function (req, res) {
 });
 
 app.post("/delete-row/:id", function (req, res) {
+  //Find the id of the user from the parameters in the request. Use that id to find it and delete it
   let id = req.params.id;
   client.db("WecycleMain").collection("Users").findOneAndDelete({
     _id: ObjectID(id)
   });
+  //Respond with the remaining users in the db as a json array.
   client.db("WecycleMain").collection("Users")
     .find()
     .toArray()
