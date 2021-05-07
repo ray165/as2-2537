@@ -54,22 +54,18 @@ $(document).ready(function () {
   // *******************************
   $(document).on("click", "span", function () {
     if (
-      $(this).parent().attr("class") === "address"        ||
-      $(this).parent().attr("class") === "name"           ||
-      $(this).parent().attr("class") === "contactNumber"  ||
-      $(this).parent().attr("class") === "bottlesTaken"   ||
+      $(this).parent().attr("class") === "address" ||
+      $(this).parent().attr("class") === "name" ||
+      $(this).parent().attr("class") === "contactNumber" ||
+      $(this).parent().attr("class") === "bottlesTaken" ||
       $(this).parent().attr("class") === "bottlesDonated"
     ) {
       let spanText = $(this).text();
       let td = $(this).parent();
-      let input = $("<input type='text' class=" + $`{this.class}` + " value='" + spanText + "'>");
-      //let inputNames = ['name', 'address', 'contactNumber', 'bottlesTaken', 'bottlesDonated'];
-      
-      $("<input type='text' class=`$(this.class)` value='" + spanText + ">");
-      console.log(input, this.className);
-      
+      let input = $("<input type='text' class=" + `${td.attr("class")}` + " value='" + spanText + "'>");
+
       td.html(input);
-      //console.log(td.html());
+      console.log(td.html());
       $(input).keyup(function (e) {
         let val = null;
         let span = null;
@@ -81,36 +77,62 @@ $(document).ready(function () {
           td.html(span);
           // lastly, send the update:
 
-         let inputID = (td.parent().find("[class='id']").text());
+          //Record the ObjectID of the user we are updating
+          let inputID = (td.parent().find("[class='id']").text());
 
-          // switch (input) {
-          // }
+          //Initialize the updated data variable
+          let updatedData = null;
 
-          let updatedData = {
-            id: td.parent().find("[class='id']").html(),
-            name: val,
-            address: val,
-            contactNumber: val,
-            bottlesTaken: val,
-            bottlesDonated: val
-          };
-          console.log(updatedData);
+          //Fill the updated data variable with whatever ObjectID and relevant data we received from the user.
+          switch (td.attr("class")) {
+            case "address":
+              updatedData = {
+                address: val
+              }
+              break;
+            case "contactNumber":
+              updatedData = {
+                contactNumber: val
+              }
+              break;
+            case "name":
+              updatedData = {
+                name: val
+              }
+              break;
+            case "bottlesTaken":
+              updatedData = {
+                bottlesTaken: val
+              }
+              break;
+            case "bottlesDonated":
+              updatedData = {
+                bottlesDonated: val
+              }
+              break;
+            default:
+              updatedData = {}
+          }
+
+          //Send the updatedData object to the server to update the db
           $.ajax({
-            url: "/update-table",
+            url: "/update-table/" + inputID,
             data: updatedData,
+            dataType: "json",
+            contentType: "application/json",
             type: "PUT",
-            success: function(data) {
-            $("class").html("DB updated");
-            readTable();
+            success: function (data) {
+              $("class").html("DB updated");
+              readTable();
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
               console.log("Error:", jqXHR, textStatus, errorThrown);
             },
 
           })
         }
       });
-        
+
     }
     console.log("table clicked!");
   });

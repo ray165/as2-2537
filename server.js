@@ -5,7 +5,8 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 const {
-  MongoClient, ObjectID
+  MongoClient,
+  ObjectID
 } = require("mongodb");
 
 app.use("/js", express.static("js"));
@@ -21,7 +22,7 @@ const client = new MongoClient(
   }
 );
 
-client.connect().then(function() {
+client.connect().then(function () {
   console.log("check before the db run");
 });
 
@@ -33,11 +34,15 @@ app.get("/", (req, res) => {
 });
 
 app.post("/create-table", function (req, res) {
-  res.send({ status: "success", rows, results });
+  res.send({
+    status: "success",
+    rows,
+    results
+  });
 
 });
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   let doc = fs.readFileSync('./index.html', "utf8");
   res.send(doc);
 })
@@ -60,7 +65,7 @@ app.get("/read-table", function (req, res) {
       .catch((error) => console.error(error));
   };
 
-  
+
   try {
     grabData();
   } catch (err) {
@@ -71,13 +76,13 @@ app.get("/read-table", function (req, res) {
 });
 
 //when updating, use number.parseInt()
-app.put("/update-table:id", function (req, res) {
-    
-      });
+app.put("/update-table", function (req, res) {
+  client.db("WecycleMain").collection("Users").updateOne(req._id)
+});
 
 
 app.delete("/delete-row/:id", function (req, res) {
-  
+
 });
 
 app.listen(PORT, () => {
