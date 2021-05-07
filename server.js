@@ -7,7 +7,6 @@ const fs = require("fs");
 const {
   MongoClient, ObjectID
 } = require("mongodb");
-// const http = require("http");
 
 app.use("/js", express.static("js"));
 app.use("/css", express.static("css"));
@@ -22,92 +21,10 @@ const client = new MongoClient(
   }
 );
 
-// const database = client.db("WecycleMain");
-// const collection = database.collection("Users");
+client.connect().then(function() {
+  console.log("check before the db run");
+});
 
-async function run() {
-  try {
-    await client.connect();
-    // -->
-    const database = client.db("WecycleMain");
-    const collection = database.collection("Users");
-    const docCount = await collection.countDocuments({});
-    console.log(docCount, "running");
-    let testGet = await collection.find({}).toArray();
-    console.log(testGet);
-
-    // collection.insertOne({
-    //   name : "Johnson Lau",
-    //   contactNumber : "236-777-5240",
-    //   bottlesDonated : 50,
-    //   bottlesTaken : 4,
-    //   address : "700 Ioco Road, Port Moody BC"
-    // });
-
-    // collection.insertMany([{
-
-    // }])
-
-    // removeFromDB({ name: "" });
-    // addToUsersCollection(
-    //   "Raymond Wong",
-    //   "778-876-5432",
-    //   0,
-    //   120,
-    //   "Heritage Mountain"
-    // );
-    // updateCollectionOnID({name : "Raymond Wong"}, {address : "123 Las Vegas Rd, LA"});
-    console.log(testGet);
-
-    // perform actions using client
-  } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
-  }
-}
-
-function removeFromDB(objectToRemove) {
-  client.connect();
-  client.db("WecycleMain").collection("Users").deleteOne(objectToRemove);
-  console.log("deleted successfully!");
-  // client.close();
-}
-
-function addToUsersCollection(
-  nameValue,
-  contactNumberValue,
-  bottlesDonatedValue,
-  bottlesTakenValue,
-  addressValue
-) {
-  client.connect();
-  client.db("WecycleMain").collection("Users").insertOne({
-    name: nameValue,
-    contactNumber: contactNumberValue,
-    bottlesDonated: bottlesDonatedValue,
-    bottlesTaken: bottlesTakenValue,
-    address: addressValue,
-  });
-}
-
-function updateCollectionOnID(searchValue, key, newValue) {
-  client.connect();
-  client.db("WecycleMain").collection("Users").updateOne(
-    {
-      _id: searchValue,
-    },
-    {
-      $set: { key: newValue },
-    }
-  );
-}
-
-console.log("check before the db run");
-
-
-client.connect();
-
-console.log("check before the db run");
 
 // EXPRESS METHODS
 
@@ -124,30 +41,6 @@ app.post("/create", function (req, res) {
 });
 
 app.get('/', function(req, res) {
-    
-  const connection = mysql.createTableConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      multipleStatements: true
-  });
-
-  const createDBTables = `CREATING WECYCLE DATABASE;
-      use test;
-      CREATE TABLE IF NOT EXISTS clients (
-      ID int NOT NULL AUTO_INCREMENT,
-      name varchar(30),
-      email varchar(30),
-      PRIMARY KEY (ID));`;
-
-  connection.connect();
-  connection.query(createDBTables, function (error, results, fields) {
-      if (error) {
-          throw error;
-      }
-  });
-  connection.end();
-
   let doc = fs.readFileSync('./index.html', "utf8");
   res.send(doc);
 })
@@ -160,7 +53,6 @@ app.get("/read-table", function (req, res) {
 
 
   async function grabData() {
-    await client.connect();
     client.db("WecycleMain").collection("Users")
       .find()
       .toArray()
@@ -178,8 +70,6 @@ app.get("/read-table", function (req, res) {
     throw new Error("grab data didnt execute properly");
   }
 
-  // client.close(); // closing the client will break the program. Why?
-
 
 });
 
@@ -191,10 +81,7 @@ app.post("/update-table", function (req, res) {
   });
 });
 
-app.delete("/delete-row", function (req, res) {
-  let rowId = req.params.id;
-  console.log(id);
-  client.db("WecycleMain").collection("Users").findOneAndDelete({ _id: rowId});
+app.delete("/delete-row/:id", function (req, res) {
   
 });
 
