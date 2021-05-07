@@ -62,7 +62,7 @@ $(document).ready(function () {
     ) {
       let spanText = $(this).text();
       let td = $(this).parent();
-      let input = $("<input type='text' class=${this.class}  value='" + spanText + "'>");
+      let input = $("<input type='text' class=" + $`{this.class}` + " value='" + spanText + "'>");
       //let inputNames = ['name', 'address', 'contactNumber', 'bottlesTaken', 'bottlesDonated'];
       
       $("<input type='text' class=`$(this.class)` value='" + spanText + ">");
@@ -81,11 +81,11 @@ $(document).ready(function () {
           td.html(span);
           // lastly, send the update:
 
-          console.log(td.parent().find("[class='id']")[0]);
+         let inputID = (td.parent().find("[class='id']").text());
 
-          switch (input) {
+          // switch (input) {
+          // }
 
-          }
           let updatedData = {
             id: td.parent().find("[class='id']").html(),
             name: val,
