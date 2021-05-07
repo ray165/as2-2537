@@ -1,5 +1,4 @@
-$(document).ready(function () {
-    console.log("hello world!");
+$(document).ready(function() {
   $.ajax({
     url: "/read-table",
     dataType: "json",
