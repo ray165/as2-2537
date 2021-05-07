@@ -77,6 +77,7 @@ app.get("/read-table", function (req, res) {
 
 //when updating, use number.parseInt()
 app.put("/update-table/:id", function (req, res) {
+  let id = req.params.id;
   client.db("WecycleMain").collection("Users").updateOne(id)
 });
 
