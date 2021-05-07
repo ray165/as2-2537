@@ -70,7 +70,7 @@ app.get("/read-table", function (req, res) {
 
 });
 
-app.post("/update-table", function (req, res) {
+app.put("/update-table", function (req, res) {
   res.send({
     status: "success",
     rows,

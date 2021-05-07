@@ -77,6 +77,23 @@ $(document).ready(function () {
 });
 
 
+// $('table').click(function(e){
+// e.preventDefault();
+// console.log("Updating table");
+//   $.ajax({
+//     type: 'PUT',
+//     url: '/update-table/' + $(this).data('id'),
+//     dataType: {}
+    
+//     }
+//   });
+
+
+
+
+
+
+ 
 
 $('.delete-button').click(function (e) {
   e.preventDefault();
