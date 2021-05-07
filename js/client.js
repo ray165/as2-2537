@@ -1,4 +1,5 @@
-$(document).ready(function() {
+$(document).ready(function () {
+  console.log("hello world!");
   $.ajax({
     url: "/read-table",
     dataType: "json",
@@ -22,19 +23,19 @@ $(document).ready(function() {
         str +=
           "<tr><td class='id'>" +
           row._id +
-          "</td><td class='name'><span>" +
+          "</td><td id ='name'>" +
           row.name +
-          "</span></td><td class='contactNumber'><span>" +
+          "</td><td id='contactNumber'><span>" +
           row.contactNumber +
-          "</span></td><td class='bottlesDonated'><span>" +
+          "</td><td id='bottlesDonated'><span>" +
           row.bottlesDonated +
-          "</span></td><td class='bottlesTaken'><span>" +
+          "</td><td id='bottlesTaken'><span>" +
           row.bottlesTaken +
-          "</span></td><td class='address'><span>" +
+          "</td><td id='address'><span>" +
           row.address +
           "</span></td><td class='deleteBtn'>" +
           `<button type="button" class="delete-button" id="${row._id}">Delete Row</button></td>`;
-      }     
+      }
       str += "</tr></table>";
       $("#root").html(str);
     },
@@ -44,8 +45,60 @@ $(document).ready(function() {
     },
   });
 
+  $('#createTable').click(function (e) {
+    e.preventDefault();
+
+    $("#name").val("");
+    $("#contactNumber").val("");
+    $("#bottleDonated").val("");
+    $("#bottlesTaken").val("");
+    $("#address").val("");
+
+    $.ajax({
+      url: "/create-table",
+      dataType: "json",
+      type: "POST",
+      data: formData,
+      success: function(data) {
+        $("#status").html("DB updated.");
+        //getTable
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        $("#p2").text(jqXHR.statusText);
+        console.log("ERROR:", jqXHR, textStatus, errorThrown);
+      }
+    });
+  }
+  )
   $("#root").on(function (e) {
     // don't allow the anchor to visit the link
     e.preventDefault();
   });
+});
+
+
+
+$('.delete-button').click(function (e) {
+  e.preventDefault();
+  console.log("Pressed delete.");
+
+  let rowId = $(this).find('id').txt();
+  console.log(rowId);
+
+  // $.ajax({
+  //   url: "/delete-row/" + rowId,
+  //   method: 'DELETE',
+  //   contentType: "application/json",
+  //   type: "POST",
+  //   success: function (response) {
+  //     console.log("Deleted? Maybe");
+  //     client.db("WecycleMain").collection("Users").findOneAndDelete({
+  //       _id: rowId
+  //     });
+  //   },
+  //   error: function (jqXHR, textStatus, errorThrown) {
+  //     $("#root").text(jqXHR.statusText);
+  //     console.log("ERROR:", jqXHR, textStatus, errorThrown);
+  //   }
+  // });
 });

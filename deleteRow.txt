@@ -1,1 +1,1 @@
-This is delete row branch. I have updated it with this txt.
+This is delete row branch. I have updated it with this txt. This is version 2 now.
