@@ -66,6 +66,9 @@ app.get("/read-table", function (req, res) {
 
 
   try {
+    // client.db("WecycleMain").collection("Users").deleteMany({
+    //   name: "Zainabe"
+    // })
     // client.db("WecycleMain").collection("Users").insertMany([{
     //   name: "Mazin",
     //   contactNumber: "1234567891",
