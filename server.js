@@ -70,13 +70,11 @@ app.get("/read-table", function (req, res) {
 
 });
 
-app.put("/update-table", function (req, res) {
-  res.send({
-    status: "success",
-    rows,
-    results
-  });
-});
+//when updating, use number.parseInt()
+app.put("/update-table:id", function (req, res) {
+    
+      });
+
 
 app.delete("/delete-row/:id", function (req, res) {
   

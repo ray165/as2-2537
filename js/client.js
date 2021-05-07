@@ -58,16 +58,15 @@ $(document).ready(function () {
     || $(this).parent().attr("class") === "contactNumber" 
     || $(this).parent().attr("class") === "bottlesTaken"
     || $(this).parent().attr("class") === "bottlesDonated") {
-      //console.log($(this).text() );
-      // got the td, let's use it create a slight-of-hand
-      // create an input, put the text from the span into
-      // the input, then when the user presses enter,
-      // take the updated text from input and put it into a span
-      // and remove the input
+
       let spanText = $(this).text();
       let td = $(this).parent();
-      let input = $("<input type='text' value='" + spanText + "'>");
-
+      let input = $("<input type='text' class=${this.class}  value='" + spanText + "'>");
+      //let inputNames = ['name', 'address', 'contactNumber', 'bottlesTaken', 'bottlesDonated'];
+      
+      $("<input type='text' class=`$(this.class)` value='" + spanText + ">");
+      console.log(input, this.className);
+      
       td.html(input);
       //console.log(td.html());
       $(input).keyup(function (e) {
@@ -75,6 +74,7 @@ $(document).ready(function () {
         let span = null;
         if (e.which == 13) {
           //console.log(td);
+
           val = $(input).val();
           span = $("<span>" + val + "</span>");
           td.html(span);
@@ -82,42 +82,37 @@ $(document).ready(function () {
 
           console.log(td.parent().find("[class='id']")[0]);
 
-          let dataToSend = {
+          switch (input) {
+
+          }
+          let updatedData = {
             id: td.parent().find("[class='id']").html(),
-            email: val,
+            name: val,
+            address: val,
+            contactNumber: val,
+            bottlesTaken: val,
+            bottlesDonated: val
           };
+          console.log(updatedData);
+          $.ajax({
+            url: "/update-table",
+            data: updatedData,
+            type: "PUT",
+            success: function(data) {
+            $("class").html("DB updated");
+            readTable();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.log("Error:", jqXHR, textStatus, errorThrown);
+            },
+
+          })
         }
       });
+        
     }
-
     console.log("table clicked!");
   });
-
-      //         let spanText = $(this).text();
-      //         let td = $(this).parent();
-      //         let input = $("<input type='text' value='" + spanText + "'>");
-
-      //         td.html(input);
-
-      //         $(input).keyup(function (e) {
-      //           let val = null;
-      //           let span = null;
-      //           if (e.which == 13) {
-
-      //             val = $(input).val();
-      //             span = $("<span>" + val + "</span>");
-      //             td.html(span);
-
-      //             console.log(td.parent().find("[class='id']")[0]);
-
-      //             let dataToSend = {
-      //               id: td.parent().find("[class='id']").html(),
-      //               email: val
-      //             };
-      //           }
-      //         }); 
-      //         console.log("table clicked!");
-      //         }});
 
 
               $("#createTable").click(function (e) {
