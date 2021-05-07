@@ -1,15 +1,15 @@
 $(document).ready(function () {
-      console.log("hello world!");
+  console.log("hello world!");
 
-      function readTable() {
-        $.ajax({
-          url: "/read-table",
-          dataType: "json",
-          type: "GET",
-          success: function (data) {
-            console.log("SUCCESS JSON ARRAY:", data);
-            // for loop to build the table
-            let str = `<table class="table table-striped" id="dataTable"><tr>
+  function readTable() {
+    $.ajax({
+      url: "/read-table",
+      dataType: "json",
+      type: "GET",
+      success: function (data) {
+        console.log("SUCCESS JSON ARRAY:", data);
+        // for loop to build the table
+        let str = `<table class="table table-striped" id="dataTable"><tr>
               <th class="id_header"><span>ID</span></th>
               <th class="name_header"><span>Name</span></th>
               <th class="contactNumber_header"><span>Contact Number</span></th>
@@ -53,17 +53,13 @@ $(document).ready(function () {
   // UPDATE SECITON INDIVIDUAL CELLS
   // *******************************
   $(document).on("click", "span", function () {
-    if ($(this).parent().attr("class") === "address" 
-    || $(this).parent().attr("class") === "name" 
-    || $(this).parent().attr("class") === "contactNumber" 
-    || $(this).parent().attr("class") === "bottlesTaken"
-    || $(this).parent().attr("class") === "bottlesDonated") {
-      //console.log($(this).text() );
-      // got the td, let's use it create a slight-of-hand
-      // create an input, put the text from the span into
-      // the input, then when the user presses enter,
-      // take the updated text from input and put it into a span
-      // and remove the input
+    if (
+      $(this).parent().attr("class") === "address"        ||
+      $(this).parent().attr("class") === "name"           ||
+      $(this).parent().attr("class") === "contactNumber"  ||
+      $(this).parent().attr("class") === "bottlesTaken"   ||
+      $(this).parent().attr("class") === "bottlesDonated"
+    ) {
       let spanText = $(this).text();
       let td = $(this).parent();
       let input = $("<input type='text' value='" + spanText + "'>");
@@ -93,84 +89,57 @@ $(document).ready(function () {
     console.log("table clicked!");
   });
 
-      //         let spanText = $(this).text();
-      //         let td = $(this).parent();
-      //         let input = $("<input type='text' value='" + spanText + "'>");
+  $("#createTable").click(function (e) {
+    e.preventDefault();
 
-      //         td.html(input);
+    $("#name").val("");
+    $("#contactNumber").val("");
+    $("#bottleDonated").val("");
+    $("#bottlesTaken").val("");
+    $("#address").val("");
 
-      //         $(input).keyup(function (e) {
-      //           let val = null;
-      //           let span = null;
-      //           if (e.which == 13) {
+    $.ajax({
+      url: "/create-table",
+      dataType: "json",
+      type: "POST",
+      data: formData,
+      success: function (data) {
+        $("#status").html("DB updated.");
+        //getTable
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#p2").text(jqXHR.statusText);
+        console.log("ERROR:", jqXHR, textStatus, errorThrown);
+      },
+    });
+  });
+  $("#root").on(function (e) {
+    // don't allow the anchor to visit the link
+    e.preventDefault();
+  });
+});
 
-      //             val = $(input).val();
-      //             span = $("<span>" + val + "</span>");
-      //             td.html(span);
+$(".delete-button").click(function (e) {
+  e.preventDefault();
+  console.log("Pressed delete.");
 
-      //             console.log(td.parent().find("[class='id']")[0]);
+  let rowId = $(this).find("id").txt();
+  console.log(rowId);
 
-      //             let dataToSend = {
-      //               id: td.parent().find("[class='id']").html(),
-      //               email: val
-      //             };
-      //           }
-      //         }); 
-      //         console.log("table clicked!");
-      //         }});
-
-
-              $("#createTable").click(function (e) {
-                e.preventDefault();
-
-                $("#name").val("");
-                $("#contactNumber").val("");
-                $("#bottleDonated").val("");
-                $("#bottlesTaken").val("");
-                $("#address").val("");
-
-                $.ajax({
-                  url: "/create-table",
-                  dataType: "json",
-                  type: "POST",
-                  data: formData,
-                  success: function (data) {
-                    $("#status").html("DB updated.");
-                    //getTable
-                  },
-                  error: function (jqXHR, textStatus, errorThrown) {
-                    $("#p2").text(jqXHR.statusText);
-                    console.log("ERROR:", jqXHR, textStatus, errorThrown);
-                  },
-                });
-              });
-              $("#root").on(function (e) {
-                // don't allow the anchor to visit the link
-                e.preventDefault();
-              });
-            });
-
-          $(".delete-button").click(function (e) {
-            e.preventDefault();
-            console.log("Pressed delete.");
-
-            let rowId = $(this).find("id").txt();
-            console.log(rowId);
-
-            // $.ajax({
-            //   url: "/delete-row/" + rowId,
-            //   method: 'DELETE',
-            //   contentType: "application/json",
-            //   type: "POST",
-            //   success: function (response) {
-            //     console.log("Deleted? Maybe");
-            //     client.db("WecycleMain").collection("Users").findOneAndDelete({
-            //       _id: rowId
-            //     });
-            //   },
-            //   error: function (jqXHR, textStatus, errorThrown) {
-            //     $("#root").text(jqXHR.statusText);
-            //     console.log("ERROR:", jqXHR, textStatus, errorThrown);
-            //   }
-            // });
-          });
+  // $.ajax({
+  //   url: "/delete-row/" + rowId,
+  //   method: 'DELETE',
+  //   contentType: "application/json",
+  //   type: "POST",
+  //   success: function (response) {
+  //     console.log("Deleted? Maybe");
+  //     client.db("WecycleMain").collection("Users").findOneAndDelete({
+  //       _id: rowId
+  //     });
+  //   },
+  //   error: function (jqXHR, textStatus, errorThrown) {
+  //     $("#root").text(jqXHR.statusText);
+  //     console.log("ERROR:", jqXHR, textStatus, errorThrown);
+  //   }
+  // });
+});
