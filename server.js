@@ -32,12 +32,9 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/html/index.html");
 });
 
-app.post("/create", function (req, res) {
-  res.send({
-    status: "success",
-    rows,
-    results
-  });
+app.post("/create-table", function (req, res) {
+  res.send({ status: "success", rows, results });
+
 });
 
 app.get('/', function(req, res) {
