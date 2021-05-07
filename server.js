@@ -4,7 +4,9 @@ const PORT = 8000;
 const express = require("express");
 const app = express();
 const fs = require("fs");
-const { MongoClient } = require("mongodb");
+const {
+  MongoClient, ObjectID
+} = require("mongodb");
 // const http = require("http");
 
 app.use("/js", express.static("js"));
@@ -13,11 +15,10 @@ app.use("/css", express.static("css"));
 const credentials = fs.readFileSync("./cert.pem");
 
 const client = new MongoClient(
-  "mongodb+srv://wecycle-vancouver.2hson.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority",
-  {
+  "mongodb+srv://wecycle-vancouver.2hson.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority", {
     sslKey: credentials,
     sslCert: credentials,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   }
 );
 
@@ -102,7 +103,11 @@ function updateCollectionOnID(searchValue, key, newValue) {
 }
 
 console.log("check before the db run");
-// run().catch(console.dir);
+
+
+client.connect();
+
+console.log("check before the db run");
 
 // EXPRESS METHODS
 
@@ -111,7 +116,11 @@ app.get("/", (req, res) => {
 });
 
 app.post("/create", function (req, res) {
-  res.send({ status: "success", rows, results });
+  res.send({
+    status: "success",
+    rows,
+    results
+  });
 });
 
 app.get('/', function(req, res) {
@@ -151,18 +160,8 @@ app.get("/read-table", function (req, res) {
 
 
   async function grabData() {
-    const client = new MongoClient(
-      "mongodb+srv://wecycle-vancouver.2hson.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority",
-      {
-        sslKey: credentials,
-        sslCert: credentials,
-        useUnifiedTopology: true,
-      }
-    );
-
-    try {
-      await client.connect();
-      client.db("WecycleMain").collection("Users")
+    await client.connect();
+    client.db("WecycleMain").collection("Users")
       .find()
       .toArray()
       .then((data) => {
@@ -170,13 +169,6 @@ app.get("/read-table", function (req, res) {
         res.json(data); //is this part wrong?
       })
       .catch((error) => console.error(error));
-    } catch (err) {
-      throw new Error("didnt connect to mongodb");
-    } finally {
-      // await client.close();
-    };
-
-    //
   };
 
   
@@ -186,17 +178,24 @@ app.get("/read-table", function (req, res) {
     throw new Error("grab data didnt execute properly");
   }
 
-    // client.close(); // closing the client will break the program. Why?
+  // client.close(); // closing the client will break the program. Why?
 
 
 });
 
 app.post("/update-table", function (req, res) {
-  res.send({ status: "success", rows, results });
+  res.send({
+    status: "success",
+    rows,
+    results
+  });
 });
 
-app.post("/delete-row", function (req, res) {
-  res.send({ status: "success", rows, results });
+app.delete("/delete-row", function (req, res) {
+  let rowId = req.params.id;
+  console.log(id);
+  client.db("WecycleMain").collection("Users").findOneAndDelete({ _id: rowId});
+  
 });
 
 app.listen(PORT, () => {

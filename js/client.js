@@ -22,15 +22,15 @@ $(document).ready(function() {
         str +=
           "<tr><td class='id'>" +
           row._id +
-          "</td><td class='name'>" +
+          "</td><td class='name'><span>" +
           row.name +
-          "</td><td class='contactNumber'><span>" +
+          "</span></td><td class='contactNumber'><span>" +
           row.contactNumber +
-          "</td><td class='bottlesDonated'><span>" +
+          "</span></td><td class='bottlesDonated'><span>" +
           row.bottlesDonated +
-          "</td><td class='bottlesTaken'><span>" +
+          "</span></td><td class='bottlesTaken'><span>" +
           row.bottlesTaken +
-          "</td><td class='address'><span>" +
+          "</span></td><td class='address'><span>" +
           row.address +
           "</span></td><td class='deleteBtn'>" +
           `<button type="button" class="delete-button" id="${row._id}">Delete Row</button></td>`;
