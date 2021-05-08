@@ -76,9 +76,30 @@ app.get("/read-table", function (req, res) {
 });
 
 //when updating, use number.parseInt()
-app.put("/update-table/:id", function (req, res) {
+app.post("/update-table/:id", function (req, res) {
   let id = req.params.id;
-  client.db("WecycleMain").collection("Users").updateOne(id)
+  let name = data.name;
+  let address = data.address;
+  let contactNumber = data.contactNumber;
+  let bottlesTaken = Number(data.bottlesTaken);
+  let bottlesDonated = Number(data.bottlesDonated);
+  console.log("these are the attributes");
+  console.log(id);
+  console.log(name);
+  console.log(address);
+  console.log(contactNumber);
+  console.log(bottlesTaken);
+  console.log(bottlesDonated);
+  let data = { $set: {
+    name: name,
+    address: address,
+    contactNumber: contactNumber,
+    bottlesTaken: bottlesTaken,
+    bottlesDonated: bottlesDonated
+  },}
+  client.db("WecycleMain").collection("Users").updateOne({
+    _id: ObjectID(id)
+  }, data);
 });
 
 

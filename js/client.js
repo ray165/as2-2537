@@ -77,52 +77,83 @@ $(document).ready(function () {
           td.html(span);
           // lastly, send the update:
 
+          let updatedData = null;
+
           //Record the ObjectID of the user we are updating
           let inputID = (td.parent().find("[class='id']").text());
-
-          //Initialize the updated data variable
-          let updatedData = null;
+          console.log(td.parent().find(".name").text());
+          console.log(td.parent().find(".contactNumber").text());
+          console.log(td.parent().find(".bottlesDonated").text());
+          console.log(td.parent().find(".bottlesTaken").text());
+          console.log(td.parent().find(".address").text());
 
           //Fill the updated data variable with whatever ObjectID and relevant data we received from the user.
           switch (td.attr("class")) {
             case "address":
               updatedData = {
-                address: val
+                name: td.parent().find(".name").text(),
+                address: val,
+                contactNumber: td.parent().find(".contactNumber").text(),
+                bottlesDonated: td.parent().find(".bottlesDonated").text(),
+                bottlesTaken: td.parent().find(".bottlesTaken").text()
               }
               break;
             case "contactNumber":
               updatedData = {
-                contactNumber: val
+                name: td.parent().find(".name").text(),
+                address: td.parent().find(".address").text(),
+                contactNumber: val,
+                bottlesDonated: td.parent().find(".bottlesDonated").text(),
+                bottlesTaken: td.parent().find(".bottlesTaken").text()
               }
               break;
             case "name":
               updatedData = {
-                name: val
+                name: val,
+                address: td.parent().find(".address").text(),
+                contactNumber: td.parent().find(".contactNumber").text(),
+                bottlesDonated: td.parent().find(".bottlesDonated").text(),
+                bottlesTaken: td.parent().find(".bottlesTaken").text()
               }
               break;
             case "bottlesTaken":
               updatedData = {
+                name: td.parent().find(".name").text(),
+                address: td.parent().find(".address").text(),
+                contactNumber: td.parent().find(".contactNumber").text(),
+                bottlesDonated: td.parent().find(".bottlesDonated").text(),
                 bottlesTaken: val
               }
               break;
             case "bottlesDonated":
               updatedData = {
-                bottlesDonated: val
+                name: td.parent().find(".name").text(),
+                address: td.parent().find(".address").text(),
+                contactNumber: td.parent().find(".contactNumber").text(),
+                bottlesDonated: val,
+                bottlesTaken: td.parent().find(".bottlesTaken").text()
               }
               break;
             default:
-              updatedData = {}
+              updatedData = {
+                name: td.parent().find(".name").text(),
+                address: td.parent().find(".address").text(),
+                contactNumber: td.parent().find(".contactNumber").text(),
+                bottlesDonated: td.parent().find(".bottlesDonated").text(),
+                bottlesTaken: td.parent().find(".bottlesTaken").text()
+              }
           }
+          console.log(updatedData);
 
           //Send the updatedData object to the server to update the db
           $.ajax({
             url: "/update-table/" + inputID,
-            data: updatedData,
+            data: JSON.stringify(updatedData),
             dataType: "json",
             contentType: "application/json",
-            type: "PUT",
+            type: "POST",
             success: function (data) {
-              $("class").html("DB updated");
+              console.log(JSON.stringify(data));
               readTable();
             },
             error: function (jqXHR, textStatus, errorThrown) {
