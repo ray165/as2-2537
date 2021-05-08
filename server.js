@@ -4,12 +4,16 @@ const PORT = 8000;
 const express = require("express");
 const app = express();
 const fs = require("fs");
+const bodyParser  = require('body-parser');
+
 const {
-  MongoClient, ObjectID
+  MongoClient,
+  ObjectID
 } = require("mongodb");
 
 app.use("/js", express.static("js"));
 app.use("/css", express.static("css"));
+app.use(bodyParser.urlencoded({extended: true}));
 
 const credentials = fs.readFileSync("./cert.pem");
 
@@ -21,7 +25,7 @@ const client = new MongoClient(
   }
 );
 
-client.connect().then(function() {
+client.connect().then(function () {
   console.log("check before the db run");
 });
 
@@ -33,11 +37,15 @@ app.get("/", (req, res) => {
 });
 
 app.post("/create-table", function (req, res) {
-  res.send({ status: "success", rows, results });
+  res.send({
+    status: "success",
+    rows,
+    results
+  });
 
 });
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   let doc = fs.readFileSync('./index.html', "utf8");
   res.send(doc);
 })
@@ -54,13 +62,13 @@ app.get("/read-table", function (req, res) {
       .find()
       .toArray()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         res.json(data); //is this part wrong?
       })
       .catch((error) => console.error(error));
   };
 
-  
+
   try {
     grabData();
   } catch (err) {
@@ -71,13 +79,24 @@ app.get("/read-table", function (req, res) {
 });
 
 //when updating, use number.parseInt()
-app.put("/update-table:id", function (req, res) {
-    
-      });
+app.post("/update-table/", function (req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  // console.log(req.body, req.body.data._id, req.body.id);
+  // let keyName = Object.keys(req.body)[1];
+  // console.log(keyName);
+  async function update() {
+    client.db("WecycleMain").collection("Users").updateOne(
+      {_id: ObjectID(req.body.id)},
+      {$set: req.body.data}).catch((error) => console.log(error));
+  };
+  update();
+
+    res.send({ status: "success", msg: "Update worked" });    
+});
 
 
 app.delete("/delete-row/:id", function (req, res) {
-  
+
 });
 
 app.listen(PORT, () => {
