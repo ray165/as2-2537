@@ -4,6 +4,8 @@ const PORT = 8000;
 const express = require("express");
 const app = express();
 const fs = require("fs");
+const bodyParser  = require('body-parser');
+
 const {
   MongoClient,
   ObjectID
@@ -11,6 +13,7 @@ const {
 
 app.use("/js", express.static("js"));
 app.use("/css", express.static("css"));
+app.use(bodyParser.urlencoded({extended: true}));
 
 const credentials = fs.readFileSync("./cert.pem");
 
@@ -59,7 +62,7 @@ app.get("/read-table", function (req, res) {
       .find()
       .toArray()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         res.json(data); //is this part wrong?
       })
       .catch((error) => console.error(error));
@@ -76,30 +79,19 @@ app.get("/read-table", function (req, res) {
 });
 
 //when updating, use number.parseInt()
-app.post("/update-table/:id", function (req, res) {
-  let id = req.params.id;
-  let name = data.name;
-  let address = data.address;
-  let contactNumber = data.contactNumber;
-  let bottlesTaken = Number(data.bottlesTaken);
-  let bottlesDonated = Number(data.bottlesDonated);
-  console.log("these are the attributes");
-  console.log(id);
-  console.log(name);
-  console.log(address);
-  console.log(contactNumber);
-  console.log(bottlesTaken);
-  console.log(bottlesDonated);
-  let data = { $set: {
-    name: name,
-    address: address,
-    contactNumber: contactNumber,
-    bottlesTaken: bottlesTaken,
-    bottlesDonated: bottlesDonated
-  },}
-  client.db("WecycleMain").collection("Users").updateOne({
-    _id: ObjectID(id)
-  }, data);
+app.post("/update-table/", function (req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  // console.log(req.body, req.body.data._id, req.body.id);
+  // let keyName = Object.keys(req.body)[1];
+  // console.log(keyName);
+  async function update() {
+    client.db("WecycleMain").collection("Users").updateOne(
+      {_id: ObjectID(req.body.id)},
+      {$set: req.body.data}).catch((error) => console.log(error));
+  };
+  update();
+
+    res.send({ status: "success", msg: "Update worked" });    
 });
 
 

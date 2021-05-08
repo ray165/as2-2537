@@ -21,7 +21,7 @@ $(document).ready(function () {
         // console.log(data[0]);
         for (let i = 0; i < data.length; i++) {
           let row = data[i];
-          console.log("row", row);
+          // console.log("row", row);
           str +=
             "<tr><td class='id'>" +
             row._id +
@@ -62,6 +62,7 @@ $(document).ready(function () {
     ) {
       let spanText = $(this).text();
       let td = $(this).parent();
+      let clickedClass = $(this).parent().attr("class");
       let input = $("<input type='text' class=" + `${td.attr("class")}` + " value='" + spanText + "'>");
 
       td.html(input);
@@ -77,83 +78,28 @@ $(document).ready(function () {
           td.html(span);
           // lastly, send the update:
 
-          let updatedData = null;
+          console.log("The class name of the column", clickedClass);
 
           //Record the ObjectID of the user we are updating
           let inputID = (td.parent().find("[class='id']").text());
-          console.log(td.parent().find(".name").text());
-          console.log(td.parent().find(".contactNumber").text());
-          console.log(td.parent().find(".bottlesDonated").text());
-          console.log(td.parent().find(".bottlesTaken").text());
-          console.log(td.parent().find(".address").text());
-
-          //Fill the updated data variable with whatever ObjectID and relevant data we received from the user.
-          switch (td.attr("class")) {
-            case "address":
-              updatedData = {
-                name: td.parent().find(".name").text(),
-                address: val,
-                contactNumber: td.parent().find(".contactNumber").text(),
-                bottlesDonated: td.parent().find(".bottlesDonated").text(),
-                bottlesTaken: td.parent().find(".bottlesTaken").text()
-              }
-              break;
-            case "contactNumber":
-              updatedData = {
-                name: td.parent().find(".name").text(),
-                address: td.parent().find(".address").text(),
-                contactNumber: val,
-                bottlesDonated: td.parent().find(".bottlesDonated").text(),
-                bottlesTaken: td.parent().find(".bottlesTaken").text()
-              }
-              break;
-            case "name":
-              updatedData = {
-                name: val,
-                address: td.parent().find(".address").text(),
-                contactNumber: td.parent().find(".contactNumber").text(),
-                bottlesDonated: td.parent().find(".bottlesDonated").text(),
-                bottlesTaken: td.parent().find(".bottlesTaken").text()
-              }
-              break;
-            case "bottlesTaken":
-              updatedData = {
-                name: td.parent().find(".name").text(),
-                address: td.parent().find(".address").text(),
-                contactNumber: td.parent().find(".contactNumber").text(),
-                bottlesDonated: td.parent().find(".bottlesDonated").text(),
-                bottlesTaken: val
-              }
-              break;
-            case "bottlesDonated":
-              updatedData = {
-                name: td.parent().find(".name").text(),
-                address: td.parent().find(".address").text(),
-                contactNumber: td.parent().find(".contactNumber").text(),
-                bottlesDonated: val,
-                bottlesTaken: td.parent().find(".bottlesTaken").text()
-              }
-              break;
-            default:
-              updatedData = {
-                name: td.parent().find(".name").text(),
-                address: td.parent().find(".address").text(),
-                contactNumber: td.parent().find(".contactNumber").text(),
-                bottlesDonated: td.parent().find(".bottlesDonated").text(),
-                bottlesTaken: td.parent().find(".bottlesTaken").text()
-              }
-          }
-          console.log(updatedData);
+          
+          // All i need is to get the ID, the class name of the id and its new value then send it over in a json object
+          let updatedData = {
+            "id": inputID,
+            "data": {
+              [clickedClass]: val
+            }
+          };
+          console.log(updatedData, inputID);
 
           //Send the updatedData object to the server to update the db
           $.ajax({
-            url: "/update-table/" + inputID,
-            data: JSON.stringify(updatedData),
+            url: "/update-table/",
+            data: updatedData,
             dataType: "json",
-            contentType: "application/json",
             type: "POST",
             success: function (data) {
-              console.log(JSON.stringify(data));
+              console.log(data);
               readTable();
             },
             error: function (jqXHR, textStatus, errorThrown) {
