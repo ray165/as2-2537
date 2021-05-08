@@ -4,6 +4,8 @@ const PORT = 8000;
 const express = require("express");
 const app = express();
 const fs = require("fs");
+const bodyParser  = require('body-parser');
+
 const {
   MongoClient,
   ObjectID
@@ -11,10 +13,7 @@ const {
 
 app.use("/js", express.static("js"));
 app.use("/css", express.static("css"));
-
-const bodyParser = require('body-parser');
-
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(bodyParser.json());
 
@@ -87,7 +86,7 @@ app.get("/read-table", function (req, res) {
       .find()
       .toArray()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         res.json(data); //is this part wrong?
       })
       .catch((error) => console.error(error));
@@ -146,12 +145,20 @@ app.get("/read-table", function (req, res) {
 
 });
 
-app.post("/update-table", function (req, res) {
-  res.send({
-    status: "success",
-    rows,
-    results
-  });
+//when updating, use number.parseInt()
+app.post("/update-table/", function (req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  // console.log(req.body, req.body.data._id, req.body.id);
+  // let keyName = Object.keys(req.body)[1];
+  // console.log(keyName);
+  async function update() {
+    client.db("WecycleMain").collection("Users").updateOne(
+      {_id: ObjectID(req.body.id)},
+      {$set: req.body.data}).catch((error) => console.log(error));
+  };
+  update();
+
+    res.send({ status: "success", msg: "Update worked" });    
 });
 
 app.post("/delete-row/:id", function (req, res) {
