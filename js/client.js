@@ -7,7 +7,7 @@ $(document).ready(function () {
       dataType: "json",
       type: "GET",
       success: function (data) {
-        console.log("SUCCESS JSON ARRAY:", data);
+        // console.log("SUCCESS JSON ARRAY:", data);
         // for loop to build the table
         let str = `<table class="table table-striped" id="dataTable"><tr>
               <th class="id_header"><span>ID</span></th>
