@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 $(document).ready(function () {
   console.log("hello world!");
@@ -8,7 +8,6 @@ $(document).ready(function () {
       dataType: "json",
       type: "GET",
       success: function (data) {
-        // console.log("SUCCESS JSON ARRAY:", data);
         // for loop to build the table
         let str = `<table class="table table-striped" id="dataTable"><tr>
               <th class="id_header"><span>ID</span></th>
@@ -19,10 +18,8 @@ $(document).ready(function () {
               <th class="address_header"><span>Address</span></th>
               <th class="deleteRow"><span>Delete Row</span></th>
             </tr>`;
-        // console.log(data[0]);
         for (let i = 0; i < data.length; i++) {
           let row = data[i];
-          // console.log("row", row);
           str +=
             "<tr><td class='id'>" +
             row._id +
@@ -78,7 +75,6 @@ $(document).ready(function () {
         let val = null;
         let span = null;
         if (e.which == 13) {
-          //console.log(td);
 
           val = $(input).val();
           span = $("<span>" + val + "</span>");
@@ -90,7 +86,7 @@ $(document).ready(function () {
           //Record the ObjectID of the user we are updating
           let inputID = td.parent().find("[class='id']").text();
 
-          // All i need is to get the ID, the class name of the id and its new value then send it over in a json object
+          // All i need is to get the ObjectID, the class name of the id and its new value then send it over in a json object
           let updatedData = {
             id: inputID,
             data: {

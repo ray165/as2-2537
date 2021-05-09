@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const PORT = 8000;
 const express = require("express");
@@ -94,49 +94,6 @@ app.get("/read-table", function (req, res) {
 
 
   try {
-
-    //The code below can be used to delete the entire database or generate some users for testing.
-
-    // client.db("WecycleMain").collection("Users").deleteMany({
-    //   bottlesDonated: 27
-    // })
-    // client.db("WecycleMain").collection("Users").insertMany([{
-    //   name: "Mazin",
-    //   contactNumber: "1234567891",
-    //   bottlesDonated: 27,
-    //   bottlesTaken: 127,
-    //   address: "12 Ravine Dr."
-    // }, {
-    //   name: "MarwanSquared",
-    //   contactNumber: "1234567891",
-    //   bottlesDonated: 27,
-    //   bottlesTaken: 127,
-    //   address: "12 Ravine Dr."
-    // }, {
-    //   name: "Johnson",
-    //   contactNumber: "1234567891",
-    //   bottlesDonated: 27,
-    //   bottlesTaken: 127,
-    //   address: "12 Ravine Dr."
-    // }, {
-    //   name: "Jason",
-    //   contactNumber: "1234567891",
-    //   bottlesDonated: 27,
-    //   bottlesTaken: 127,
-    //   address: "12 Ravine Dr."
-    // }, {
-    //   name: "Raymond",
-    //   contactNumber: "1234567891",
-    //   bottlesDonated: 27,
-    //   bottlesTaken: 127,
-    //   address: "12 Ravine Dr."
-    // }, {
-    //   name: "Zainabe",
-    //   contactNumber: "1234567891",
-    //   bottlesDonated: 27,
-    //   bottlesTaken: 127,
-    //   address: "12 Ravine Dr."
-    // }, ])
     grabData();
   } catch (err) {
     throw new Error("grab data didnt execute properly");
@@ -148,9 +105,6 @@ app.get("/read-table", function (req, res) {
 //when updating, use number.parseInt()
 app.post("/update-table/", function (req, res) {
   res.setHeader('Content-Type', 'application/json');
-  // console.log(req.body, req.body.data._id, req.body.id);
-  // let keyName = Object.keys(req.body)[1];
-  // console.log(keyName);
   async function update() {
     client.db("WecycleMain").collection("Users").updateOne(
       {_id: ObjectID(req.body.id)},
@@ -172,7 +126,7 @@ app.post("/delete-row/:id", function (req, res) {
     .find()
     .toArray()
     .then((data) => {
-      res.json(data); //is this part wrong?
+      res.json(data);
     })
 });
 
