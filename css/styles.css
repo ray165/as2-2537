@@ -40,9 +40,11 @@ th,td {
 }
 
 fieldset,
-span {
+span, input {
     display: flex;
     align-items: center;
+    text-align: center;
+    width: auto;
 }
 
 #root {
@@ -56,14 +58,21 @@ span {
 }
 
 #createTable {
-    padding: 1rem;
+    padding: 1.5rem;
+    margin-left: 2rem;
     margin: 1rem;
+    transition-duration: 0.4s;
+    background-color: lightgreen;
+    
+}
+
+#createTable:hover {
+    background-color: green;
 }
 
 .delete-button {
     transition-duration: 0.4s;
     background-color: #f4C2C2;
-    
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
@@ -79,7 +88,14 @@ span {
 
 input[type=text] {
     border: 1px solid black;
-    padding:10px;
+    padding: 0.5rem;
+    margin: 1rem;
     border:0;
-    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    box-shadow: 5px 5px 5px 5px rgba(68, 68, 68, 0.6);
   }
+
+  #addressInput {
+      padding-right: 1.5rem;
+  }
+
+ 
