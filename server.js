@@ -86,7 +86,6 @@ app.get("/read-table", function (req, res) {
       .find()
       .toArray()
       .then((data) => {
-        // console.log(data);
         res.json(data); //is this part wrong?
       })
       .catch((error) => console.error(error));

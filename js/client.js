@@ -137,9 +137,14 @@ $(document).ready(function () {
         console.log(data);
 
         readTable();
+        
+        $("#nameInput").val("");
+        $("#contactNumberInput").val("");
+        $("#bottlesDonatedInput").val("");
+        $("#bottlesTakenInput").val("");
+        $("#addressInput").val("");
 
         $("#status").html(data);
-        //getTable
       },
       error: function (jqXHR, textStatus, errorThrown) {
         $("#p2").text(jqXHR.statusText);
