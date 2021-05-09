@@ -1,7 +1,85 @@
-#students {
-    border: 1px solid black;
+html {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
 }
 
-#students-heading{
+#students {
+
+    font-size: 18pt;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    border: 1px solid black;
     text-align: center;
+
 }
+
+
+#students-heading {
+    font-weight: bold;
+    text-align: center;
+    font-size: 24pt;
+}
+
+#root {
+    display: inline;
+    text-align: center;
+    align-items: center;
+
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+
+th,td {
+    border: 1px solid #999;
+    text-align: center;
+    border-collapse: collapse;
+    padding: 1rem;
+    margin: 0.5rem;
+}
+
+fieldset,
+span {
+    display: flex;
+    align-items: center;
+}
+
+#root {
+    align-self: center;
+    display: flex;
+    align-content: center;
+}
+
+ tr:nth-child(3n) {
+    background-color: lightblue;
+}
+
+#createTable {
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.delete-button {
+    transition-duration: 0.4s;
+    background-color: #f4C2C2;
+    
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    text-emphasis-color: white;
+}
+
+.delete-button:hover {
+    border-color: 1px solid black;
+    background-color: #FF6961;
+}
+
+input[type=text] {
+    border: 1px solid black;
+    padding:10px;
+    border:0;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+  }
